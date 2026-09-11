@@ -1,23 +1,12 @@
-# python -m streamlit run "C:\Users\M42676\Python Scripts\propsol_backup_20260427_173146\my_sql_formater.py"
-
 import streamlit as st
 
 from sql_house_style import format_text
 
 SAMPLE_SQL = """
-create or replace table ${v_e_propsol_uk_db}.PROPSOL_UK.EPC_SOLAR as
-with solar_improvements as (
-select lmk_key, array_to_string(array_agg(distinct description) within group (order by description), ',') as suggestions, max(avg_indicative_cost) indicative_cost_gbp
-from (select * from ${v_e_propsol_uk_db}.PROPSOL_UK.EPC_RECOMMENDATIONS_CORTEX_SUMMERISED where raw_output = 'SOLAR')
-group by lmk_key)
-, other_solar_attr as (
-select lmk_key, case when solar_water_heating_flag = 'Y' then 'Y' else null end as solar_water_heating_flag, nvl(photo_supply, 0) as photo_supply
-from ${v_e_propsol_uk_db}.PROPSOL_UK.EPC_ATTR x)
-select lmk_key, solar_water_heating_flag, photo_supply
-from (select x.lmk_key, case when length(solar_water_heating_flag) != 0 then solar_water_heating_flag else null end as solar_water_heating_flag
-from (select lmk_key from ${v_e_propsol_uk_db}.PROPSOL_UK.EPC_ATTR) x
-left join solar_improvements a on x.lmk_key = a.lmk_key
-left join other_solar_attr b on x.lmk_key = b.lmk_key);
+select *
+from table_a a
+left join table_b b
+on a.key = b.key
 """.strip()
 
 st.set_page_config(
